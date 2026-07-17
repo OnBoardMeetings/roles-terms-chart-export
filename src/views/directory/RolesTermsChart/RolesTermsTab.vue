@@ -150,15 +150,20 @@
 			<ExportModal v-model="showExportModal" @download="onDownload" @resources="onResources" />
 			<AddToResourcesModal v-model="showResourcesModal" @add="onAddedToResources" />
 
-			<!-- Toast queue for download / save confirmations — contained too, so
-			     it appears within the prototype frame, not over the hosting site. -->
+			<!-- Download / save confirmations. `contained` (via overlayDefaults →
+			     VSnackbarQueue) keeps the toast inside the prototype frame rather
+			     than teleported to <body> over the hosting site. -->
 			<OBSnackbarQueue />
 		</v-defaults-provider>
 
 		<!-- The board-ready preview is a full-page document view; keep it
 		     viewport-sized (not contained) — confining it to the prototype frame
 		     clipped its content. -->
-		<RolesTermsPrintPreview v-model="showPrintPreview" :view="viewKey" />
+		<RolesTermsPrintPreview
+			v-model="showPrintPreview"
+			:view="viewKey"
+			@downloaded="onPdfDownloaded"
+		/>
 	</div>
 </template>
 
@@ -205,15 +210,17 @@ const showFilters = ref(false);
 const showPrintPreview = ref(false);
 const showExportModal = ref(false);
 const showResourcesModal = ref(false);
-const snackbar = useSnackbarQueueStore();
 
-// Keep modal overlays + scrim inside the prototype frame (#ob-app-core) rather
-// than teleported to <body> over the whole hosting site.
+// Keep modal overlays + scrim AND the snackbar inside the prototype frame
+// (#ob-app-core) rather than teleported to <body> over the whole hosting site.
+// The snackbar renders Vuetify's VSnackbarQueue, so that's the key to contain.
 const overlayDefaults = {
 	VDialog: { contained: true },
 	VOverlay: { contained: true },
-	VSnackbar: { contained: true },
+	VSnackbarQueue: { contained: true },
 };
+
+const snackbar = useSnackbarQueueStore();
 
 const viewTabs: IOBTab[] = [
 	{ key: 'chart', label: 'Chart', iconLeft: 'ChartColumn', iconLeftLocation: 'Lucide' },
@@ -246,6 +253,16 @@ function onResources(): void {
 	showResourcesModal.value = true;
 }
 
+// Fired from the board preview after Print / Save as PDF — confirms the
+// download, matching the Excel path.
+function onPdfDownloaded(): void {
+	snackbar.addSnack({
+		text: 'Your PDF download is complete.',
+		actionVariant: 'primary',
+		hideAction: true,
+	});
+}
+
 function onAddedToResources(payload: { folder: string; fileName: string }): void {
 	snackbar.addSnack({
 		text: `“${payload.fileName}” added to ${payload.folder}.`,
@@ -265,6 +282,7 @@ const onAdd = (mode: 'group' | 'member' | 'manual') => emit('add', mode);
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	position: relative;
 	// Grey gutter around the white card.
 	padding: calc(2.4 * var(--r));
 
@@ -390,23 +408,18 @@ const onAdd = (mode: 'group' | 'member' | 'manual') => emit('add', mode);
 }
 </style>
 
-<!--
-  Unscoped: the snackbar (Vuetify v-snackbar) teleports outside #ob-app-core,
-  where the DS's var(--system-background-primary) white surface doesn't resolve —
-  it falls back to Vuetify's gray. Force the intended white + dark text with
-  literal values so the toast reads as part of the prototype.
--->
 <style lang="scss">
-// Offset parent for the `contained` modal overlays, so their scrim is bounded
-// to the prototype frame instead of the viewport.
+// Offset parent for the `contained` modal overlays + snackbar, so they're
+// bounded to the prototype frame instead of the viewport.
 #ob-app-core {
 	position: relative;
 }
 
+// Safety net: even contained, keep the snackbar the DS's intended white with
+// dark text (the token can go unresolved depending on where it mounts).
 .v-snackbar__wrapper {
 	background-color: #ffffff !important;
 	color: #000000 !important;
-	box-shadow: 0 calc(0.1 * var(--r)) calc(2 * var(--r)) rgba(0, 0, 0, 0.16) !important;
 }
 
 .v-snackbar__wrapper .ob-snackbar-text {

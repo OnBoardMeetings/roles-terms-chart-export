@@ -101,7 +101,7 @@ import RoleEntryTable from './RoleEntryTable.vue';
 import { useRolesTermsChart } from '../composables/useRolesTermsChart';
 
 const props = defineProps<{ modelValue: boolean; view: 'chart' | 'table' }>();
-const emit = defineEmits<{ 'update:modelValue': [value: boolean] }>();
+const emit = defineEmits<{ 'update:modelValue': [value: boolean]; downloaded: [] }>();
 
 const { people, entryRows, scale, colorFor, serviceLabel } = useRolesTermsChart();
 
@@ -136,7 +136,13 @@ const legend = computed(() => {
 	return [...seen.values()];
 });
 
-const onPrint = () => window.print();
+function onPrint(): void {
+	window.print();
+	// Signal the download so the host can confirm with a toast, then close the
+	// preview so we land back on the Roles & Terms page.
+	emit('downloaded');
+	emit('update:modelValue', false);
+}
 </script>
 
 <style scoped lang="scss">
