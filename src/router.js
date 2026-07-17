@@ -68,7 +68,7 @@ const routes = [
 	{
 		path: '/directory',
 		name: 'directory',
-		component: () => import('@/views/_placeholder.vue'),
+		component: () => import('@/views/directory/index.vue'),
 		meta: { label: 'Directory' },
 	},
 	{

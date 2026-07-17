@@ -7,9 +7,9 @@
           <!-- Title -->
           <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
             <h1 class="text-sm sm:text-lg font-semibold text-gray-900 truncate">
-              UX Prototype
+              Roles &amp; Terms
             </h1>
-            <span class="text-xs text-gray-400 hidden lg:inline">Scaffold</span>
+            <span class="text-xs text-gray-400 hidden lg:inline">Visual Export</span>
           </div>
 
           <!-- Controls -->

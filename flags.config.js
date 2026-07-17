@@ -33,7 +33,16 @@ export default {
   //       'enhanced-behavior': { phase: 'phase2' }, // ships later
   //     },
   //   },
-  features: {},
+  features: {
+    'roles-terms-visual-export': {
+      label: 'Roles & Terms Visual Export',
+      phase: 'phase1',
+      stories: {
+        'export-active-view': {},
+        'legible-long-tenure': {},
+      },
+    },
+  },
 
   // ─── Active Phases ─────────────────────────────────────────
   activePhases: ['phase1'],

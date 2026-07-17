@@ -168,21 +168,22 @@ export const CHIP_COLORS = {
  * @type {ProductInputOverview}
  */
 export const productInputOverview = {
-  title: '[Initiative title]',
+  title: 'Roles & Terms Chart View — Visual Export',
   problem:
-    '[Parent problem statement — describe the umbrella gap that every cluster below shares. Who feels it, where, and what does it cost them?]',
+    'Organization Admins (Kelly "The Juggler") can view a rich Roles & Terms chart of every board member\'s terms and tenure overlaps, but the only export is a raw Excel file — there is no way to produce or share a board-ready visual from OnBoard. Admins rebuild the chart by hand in an external tool before each board meeting (Interra Credit Union reports hours per cycle). ~358 organizations/month actively use Roles & Terms, and long-tenured members (10+ years) make the manual effort worse.',
   hypothesis:
-    '[What you believe will happen once the clusters ship together. Tie to a growth lever (acquisition, retention, upsell) where possible.]',
+    'If Admins can export the Roles & Terms view as a board-ready visual — and either download it or save it straight into an OnBoard resource folder — they will stop recreating the chart externally, cutting hours per meeting cycle and keeping governance data OnBoard-sourced. This addresses a named retention risk (Interra CU) and strengthens governance-maturity positioning upmarket.',
   assumptions: [
-    { kind: 'TECHNICAL', text: '[Technical assumption — platform / architecture / performance limit you\'re relying on.]' },
-    { kind: 'DEPENDENCY', text: '[Dependency assumption — third-party service or other team\'s deliverable you\'re counting on.]' },
-    { kind: 'OTHER', text: '[Behavioural / business assumption — something about users or context you\'re taking as given.]' },
+    { kind: 'TECHNICAL', text: 'The in-product chart and table can be rendered to a faithful print/PDF layout — all names, roles, term dates, and overlaps — including 10+ year spans without truncation.' },
+    { kind: 'DEPENDENCY', text: 'The in-OnBoard save path reuses the existing Resources folder system (the Add To Resources flow used by meeting minutes).' },
+    { kind: 'OTHER', text: 'Admins produce board materials; directors (Brian, Charlie, Cathy) are consumption personas who receive the output at meetings.' },
   ],
   constraints: [
-    { kind: 'TIMELINE', text: '[Timeline constraint — date, deadline, or sequencing pressure.]' },
-    { kind: 'REFACTOR', text: '[Refactor in flight that affects this work — coordinate with whoever owns it.]' },
-    { kind: 'SCOPE', text: '[Scope boundary — what\'s explicitly in or out of this push.]' },
-    { kind: 'DEPENDENCY', text: '[Dependency constraint — service or team this work is gated on.]' },
+    { kind: 'SCOPE', text: 'No redesign of the in-product Roles & Terms chart/table — only the export experience and the export-output layout.' },
+    { kind: 'SCOPE', text: 'Admin-only. No export for Member, Contributor, or Reader roles.' },
+    { kind: 'SCOPE', text: 'Adaptation from brief: the brief framed Excel as a separate, unchanged export; the prototype folds Excel and the new visual PDF into one unified Export modal. Excel behavior is preserved, just surfaced within the modal.' },
+    { kind: 'DEPENDENCY', text: 'How the file is actually generated (PDF renderer vs. browser print) is an engineering implementation detail — the prototype defines the experience, not the renderer.' },
+    { kind: 'TIMELINE', text: 'CX-driven commitment tied to Interra Credit Union renewal (9/7/27).' },
   ],
 }
 
@@ -195,7 +196,7 @@ export const productInputOverview = {
  */
 export const productInputContext = {
   industries: ['All'],
-  size: ['SMB', 'UPMARKET'],
+  size: ['UPMARKET'],
 }
 
 /**
@@ -209,29 +210,28 @@ export const productInputContext = {
  */
 export const productInput = [
   {
-    id: 'placeholder-cluster-1',
-    persona: ['CONSUMPTION'],
+    id: 'admin-produce-export',
+    persona: ['CREATION'],
     problem:
-      '[Persona-specific framing of the parent problem — what does this audience hit, in their own words? Be specific.]',
+      'Kelly can see the full Roles & Terms chart in OnBoard but cannot produce a board-ready visual from it — the only export is raw Excel. So before every board meeting she rebuilds the chart by hand in an external tool, a workflow that costs hours per cycle and drifts from the source data.',
     capabilities: [
-      { priority: 'P0', text: '[P0 capability — must-have for the prototype to be meaningful.]' },
-      { priority: 'P0', text: '[Another P0 capability.]' },
-      { priority: 'P1', text: '[P1 capability — important but not table-stakes.]' },
-      { priority: 'P2', text: '[P2 capability — nice-to-have / stretch.]' },
+      { priority: 'P0', text: 'From one Export action on the Roles & Terms view, choose the format — visual PDF or Excel — for whichever view is active (chart or table).' },
+      { priority: 'P0', text: 'Choose the destination: download to device, or save directly into an OnBoard resource folder without leaving OnBoard.' },
+      { priority: 'P0', text: 'The board-ready PDF renders the full roster and timeline with 10+ year tenures complete and legible — no truncation, no hairline bars.' },
+      { priority: 'P1', text: 'Clear confirmation after the action — a toast on download, and on save into a named resource folder.' },
+      { priority: 'P2', text: 'Name the file when saving to Resources so it lands with a meaningful title.' },
     ],
     impact: ['RETENTION'],
   },
   {
-    id: 'placeholder-cluster-2',
-    persona: ['CREATION'],
+    id: 'director-consume-output',
+    persona: ['CONSUMPTION'],
     problem:
-      '[Persona-specific framing of the parent problem for the creation-side audience.]',
+      'Directors (Brian "The Expert", Charlie "The Facilitator", Cathy "The Leader") receive the Roles & Terms picture at board meetings. Today it is a manually recreated approximation that can carry version and quality variance rather than an accurate, OnBoard-sourced view.',
     capabilities: [
-      { priority: 'P0', text: '[P0 capability.]' },
-      { priority: 'P0', text: '[P0 capability.]' },
-      { priority: 'P1', text: '[P1 capability.]' },
-      { priority: 'P2', text: '[P2 capability.]' },
+      { priority: 'P0', text: 'Receive an accurate, OnBoard-sourced visual of board composition, roles, terms, and overlaps — not a hand-rebuilt approximation.' },
+      { priority: 'P1', text: 'Long-serving members\' complete tenure timelines render fully so succession and term continuity are readable at a glance.' },
     ],
-    impact: ['NEW ACQUISITION', 'UPSELL'],
+    impact: ['RETENTION'],
   },
 ]
